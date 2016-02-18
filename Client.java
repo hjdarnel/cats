@@ -14,7 +14,7 @@ public class Client {
 
     public static void main(String [] args)
     {
-        String serverName = "localhost";
+        String serverName = "192.168.1.37";
         int port = 6066;
         String[] filenames = {"test1.jpg", "test2.jpg", "test3.jpg", "test4.jpg", "test.jpg"};
 
