@@ -16,7 +16,7 @@ public class Client {
     {
         String serverName = "localhost";
         int port = 6066;
-        String[] filenames = {"test1.jpg", "test2.jpg", "test3.jpg", "test4.jpg", "test.jpg"};
+        String[] filenames = {"test1.jpg", "test2.jpg", "test3.jpg", "test4.jpg", "test5.jpg"};
 
         for (String x : filenames){
           try
