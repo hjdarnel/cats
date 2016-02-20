@@ -1,57 +1,41 @@
-import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.File;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
+import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
+
 import javax.swing.JLabel;
+import javax.swing.JFrame;
+import javax.swing.ImageIcon;
 
-public class Server extends Thread {
-    private ServerSocket serverSocket;
-    Socket server;
+public class Server {
+  public static void main(String[] args) {
+    int counter = 1;
+    try{
+      ServerSocket serverSocket = new ServerSocket(6066);
+      while(true){
+        Socket client = serverSocket.accept();
 
-    public Server(int port) throws IOException, ClassNotFoundException, Exception
-    {
-        serverSocket = new ServerSocket(port);
-        serverSocket.setSoTimeout(180000);
+        BufferedImage img=ImageIO.read(ImageIO.createImageInputStream(client.getInputStream()));
+        JFrame frame = new JFrame();
+        frame.getContentPane().add(new JLabel(new ImageIcon(img)));
+        frame.pack();
+        frame.setVisible(true);
+
+        File outputfile = new File("image"+counter+".jpg");
+        ImageIO.write(img, "jpg", outputfile);
+        counter++;
+
+        client.close();
+      }
+
+    } catch(SocketTimeoutException st) {
+        System.out.println("Socket timed out!");
+    } catch (IOException ioe){
+        System.out.println(ioe);
     }
-
-    public void run()
-    {
-        while(true)
-        {
-            try
-            {
-                server = serverSocket.accept();
-                BufferedImage img=ImageIO.read(ImageIO.createImageInputStream(server.getInputStream()));
-                JFrame frame = new JFrame();
-                frame.getContentPane().add(new JLabel(new ImageIcon(img)));
-                frame.pack();
-                frame.setVisible(true);
-            }
-            catch(SocketTimeoutException st)
-            {
-                System.out.println("Socket timed out!");
-                break;
-            }
-            catch(IOException e)
-            {
-                e.printStackTrace();
-                break;
-            }
-            catch(Exception ex)
-            {
-                System.out.println(ex);
-            }
-        }
-    }
-
-    public static void main(String [] args) throws IOException, ClassNotFoundException, Exception
-    {
-        Thread t = new Server(6066);
-        t.start();
-    }
+  }
 }
